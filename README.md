@@ -240,8 +240,8 @@ Este proyecto está bajo la licencia MIT. Ver `LICENSE` para más detalles.
 ## 👨‍💻 Autor
 
 **Rafael García**
-- LinkedIn: [tu-linkedin](https://linkedin.com/in/tu-perfil)
-- GitHub: [@tu-usuario](https://github.com/tu-usuario)
+- LinkedIn: [Rafael Garcia](https://www.linkedin.com/in/rafael-garcia-534aa1219/)
+- GitHub: [@RaafaGarcia](https://github.com/RaafaGarcia)
 - Email: raafagca@gmail.com
 
 ---
