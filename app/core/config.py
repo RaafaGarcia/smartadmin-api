@@ -1,8 +1,8 @@
 import os
-from pydantic_settings import BaseSettings
 from typing import List
+from pydantic import BaseModel
 
-class Settings(BaseSettings):
+class Settings(BaseModel):
     PROJECT_NAME: str = "SmartAdmin API"
     VERSION: str = "1.0.0"
     API_V1_STR: str = "/api"
@@ -30,8 +30,6 @@ class Settings(BaseSettings):
     # Render specific
     PORT: int = int(os.getenv("PORT", 8000))
     RENDER_EXTERNAL_URL: str = os.getenv("RENDER_EXTERNAL_URL", "")
-    
-    class Config:
-        env_file = ".env"
 
+# Create settings instance
 settings = Settings()
