@@ -46,7 +46,7 @@ async def login(
     # SQLAlchemy 2.0 style query
     stmt = select(User).where(User.email == form_data.username)
     user = db.execute(stmt).scalar_one_or_none()
-    
+    # return {"access_token": user.hashed_password, "token_type": "bearer"}
     if not user or not security.verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

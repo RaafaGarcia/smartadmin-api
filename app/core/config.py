@@ -18,9 +18,9 @@ class Settings(BaseSettings):
     ALLOWED_HOSTS: List[str] = [
         "http://localhost:3000",
         "http://127.0.0.1:3000",
-        "https://*.onrender.com",
-        "https://*.github.io",
-        "https://smartadmin-api.onrender.com"  # Tu dominio específico
+        "https://raafagarcia.github.io",          # tu frontend en GitHub Pages
+        "https://smartadmin-api.onrender.com",
+        "https://*.onrender.com"  
     ]
     
     # Render specific
