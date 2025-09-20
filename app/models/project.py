@@ -17,5 +17,3 @@ class Project(Base):
 
     owner = relationship("User", back_populates="projects")
 
-# Agregar relación inversa en User
-from sqlalchemy.orm import relationship
