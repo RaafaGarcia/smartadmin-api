@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 from datetime import datetime
 from typing import Optional
 
@@ -22,9 +22,8 @@ class User(UserBase):
     is_admin: bool
     created_at: datetime
     
-    class Config:
-        from_attributes = True
-        orm_mode = True
+    # Pydantic V2 style
+    model_config = ConfigDict(from_attributes=True)
 
 class Token(BaseModel):
     access_token: str

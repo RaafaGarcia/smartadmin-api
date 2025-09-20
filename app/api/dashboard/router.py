@@ -1,22 +1,26 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
+from sqlalchemy import select, func
 from app.core.database import get_db
 from app.models.user import User
 from app.models.project import Project
 from app.schemas.dashboard import DashboardData, DashboardMetrics, ChartData
-import random
-from datetime import datetime, timedelta
 
 router = APIRouter()
 
 @router.get("/metrics", response_model=DashboardData)
 async def get_dashboard_metrics(db: Session = Depends(get_db)):
-    # Get real metrics
-    total_users = db.query(User).count()
-    active_projects = db.query(Project).filter(Project.status == "active").count()
-    completed_projects = db.query(Project).filter(Project.status == "completed").count()
+    # SQLAlchemy 2.0 queries
+    total_users_stmt = select(func.count(User.id))
+    total_users = db.execute(total_users_stmt).scalar()
     
-    # Mock data for demo purposes
+    active_projects_stmt = select(func.count(Project.id)).where(Project.status == "active")
+    active_projects = db.execute(active_projects_stmt).scalar()
+    
+    completed_projects_stmt = select(func.count(Project.id)).where(Project.status == "completed")
+    completed_projects = db.execute(completed_projects_stmt).scalar()
+    
+    # Metrics
     metrics = DashboardMetrics(
         total_users=total_users or 42,
         active_projects=active_projects or 15,
@@ -27,7 +31,7 @@ async def get_dashboard_metrics(db: Session = Depends(get_db)):
     # Mock chart data
     user_growth = ChartData(
         labels=["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-        data=[10, 15, 22, 28, 35, 42]
+        data=[10, 15, 22, 28, 35, total_users or 42]
     )
     
     project_status = {

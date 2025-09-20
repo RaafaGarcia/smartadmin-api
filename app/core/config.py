@@ -1,20 +1,16 @@
-import os
+from pydantic_settings import BaseSettings
 from typing import List
-from pydantic import BaseModel
 
-class Settings(BaseModel):
+class Settings(BaseSettings):
     PROJECT_NAME: str = "SmartAdmin API"
     VERSION: str = "1.0.0"
     API_V1_STR: str = "/api"
     
     # Database - Render auto-injects DATABASE_URL
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./test.db")
+    DATABASE_URL: str = "sqlite:///./test.db"
     
     # Security
-    SECRET_KEY: str = os.getenv(
-        "SECRET_KEY", 
-        "smartadmin-fallback-secret-key-change-in-production-32-chars"
-    )
+    SECRET_KEY: str = "smartadmin-fallback-secret-key-change-in-production-32-chars"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
@@ -28,8 +24,9 @@ class Settings(BaseModel):
     ]
     
     # Render specific
-    PORT: int = int(os.getenv("PORT", 8000))
-    RENDER_EXTERNAL_URL: str = os.getenv("RENDER_EXTERNAL_URL", "")
+    PORT: int = 8000
+    RENDER_EXTERNAL_URL: str = ""
+    
+    model_config = {"env_file": ".env"}
 
-# Create settings instance
 settings = Settings()

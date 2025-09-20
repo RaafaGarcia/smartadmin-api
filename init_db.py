@@ -1,12 +1,9 @@
-import os
 import sys
 from sqlalchemy import text
 from app.core.database import engine, Base, SessionLocal
-from app.models.user import User
-from app.models.project import Project
 
 def init_db():
-    """Initialize database tables for Render deployment"""
+    """Initialize database tables for modern SQLAlchemy"""
     try:
         print("🗄️  Creating database tables...")
         
@@ -15,15 +12,18 @@ def init_db():
             result = connection.execute(text("SELECT 1"))
             print("✅ Database connection successful!")
         
-        # Create all tables
+        # Create all tables (SQLAlchemy 2.0 style)
         Base.metadata.create_all(bind=engine)
         print("✅ Database tables created successfully!")
         
         # Check if tables exist and have data
-        db = SessionLocal()
-        user_count = db.query(User).count()
-        print(f"📊 Current users in database: {user_count}")
-        db.close()
+        with SessionLocal() as db:
+            from sqlalchemy import select, func
+            from app.models.user import User
+            
+            stmt = select(func.count(User.id))
+            user_count = db.execute(stmt).scalar()
+            print(f"📊 Current users in database: {user_count}")
         
         return True
         

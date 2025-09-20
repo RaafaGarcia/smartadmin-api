@@ -2,6 +2,7 @@ from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+from sqlalchemy import select
 from app.core import security
 from app.core.config import settings
 from app.core.database import get_db
@@ -13,8 +14,10 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 @router.post("/register", response_model=UserSchema)
 async def register(user_data: UserCreate, db: Session = Depends(get_db)):
-    # Check if user exists
-    db_user = db.query(User).filter(User.email == user_data.email).first()
+    # SQLAlchemy 2.0 style query
+    stmt = select(User).where(User.email == user_data.email)
+    db_user = db.execute(stmt).scalar_one_or_none()
+    
     if db_user:
         raise HTTPException(
             status_code=400,
@@ -40,7 +43,9 @@ async def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
 ):
-    user = db.query(User).filter(User.email == form_data.username).first()
+    # SQLAlchemy 2.0 style query
+    stmt = select(User).where(User.email == form_data.username)
+    user = db.execute(stmt).scalar_one_or_none()
     
     if not user or not security.verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
@@ -55,13 +60,3 @@ async def login(
     )
     
     return {"access_token": access_token, "token_type": "bearer"}
-
-@router.get("/me", response_model=UserSchema)
-async def read_users_me(
-    current_user: str = Depends(oauth2_scheme),
-    db: Session = Depends(get_db)
-):
-    user = db.query(User).filter(User.email == current_user).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
