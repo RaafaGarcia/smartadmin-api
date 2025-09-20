@@ -1,7 +1,8 @@
 import sys
 from sqlalchemy import text
 from app.core.database import engine, Base, SessionLocal
-
+from app.models.user import User
+from app.models.project import Project
 def init_db():
     """Initialize database tables for modern SQLAlchemy"""
     try:
@@ -19,7 +20,7 @@ def init_db():
         # Check if tables exist and have data
         with SessionLocal() as db:
             from sqlalchemy import select, func
-            from app.models.user import User
+            
             
             stmt = select(func.count(User.id))
             user_count = db.execute(stmt).scalar()
