@@ -11,7 +11,10 @@ class Settings(BaseSettings):
     DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./test.db")
     
     # Security
-    SECRET_KEY: str = os.getenv("SECRET_KEY", "fallback-secret-key-32-chars")
+    SECRET_KEY: str = os.getenv(
+        "SECRET_KEY", 
+        "smartadmin-fallback-secret-key-change-in-production-32-chars"
+    )
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
@@ -20,8 +23,13 @@ class Settings(BaseSettings):
         "http://localhost:3000",
         "http://127.0.0.1:3000",
         "https://*.onrender.com",
-        "https://*.github.io"
+        "https://*.github.io",
+        "https://smartadmin-api.onrender.com"  # Tu dominio específico
     ]
+    
+    # Render specific
+    PORT: int = int(os.getenv("PORT", 8000))
+    RENDER_EXTERNAL_URL: str = os.getenv("RENDER_EXTERNAL_URL", "")
     
     class Config:
         env_file = ".env"
